@@ -1,0 +1,46 @@
+services:
+  - type: web
+    name: svarakarsa-api
+    runtime: python
+    region: singapore
+    plan: free
+    rootDir: backend
+    buildCommand: pip install -r requirements.txt
+    startCommand: uvicorn app.main:app --host 0.0.0.0 --port $PORT
+    healthCheckPath: /health
+    envVars:
+      - key: DATABASE_URL
+        fromDatabase:
+          name: svarakarsa-db
+          property: connectionString
+      - key: PYTHON_VERSION
+        value: 3.12.10
+      - key: SECRET_KEY
+        sync: false
+      - key: ADMIN_USERNAME
+        sync: false
+      - key: ADMIN_PASSWORD
+        sync: false
+      - key: CORS_ORIGINS
+        value: https://svarakarsa-web.onrender.com
+
+  - type: web
+    name: svarakarsa-web
+    runtime: static
+    rootDir: frontend
+    buildCommand: npm install && npm run build
+    staticPublishPath: dist
+    envVars:
+      - key: VITE_API_URL
+        value: https://svarakarsa-api.onrender.com
+    routes:
+      - type: rewrite
+        source: /*
+        destination: /index.html
+
+databases:
+  - name: svarakarsa-db
+    databaseName: kkn_svarakarsa
+    user: kkn_svarakarsa
+    region: singapore
+    plan: free

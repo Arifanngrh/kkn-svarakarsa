@@ -1,0 +1,22 @@
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+
+# Env / secrets
+.env
+.env.*
+!.env.example
+
+# Frontend
+node_modules/
+dist/
+
+# Runtime uploads
+backend/uploads/*
+!backend/uploads/.gitkeep
+
+# Local DB / editor
+*.db
+.vscode/
+.DS_Store
